@@ -24,6 +24,11 @@ async def scrape_marketplace():
             price_text = price_el.get_text(strip=True) if price_el else "0"
             description = desc_el.get_text(strip=True) if desc_el else ""
             link = "https://intro.co" + link_el['href'] if link_el and link_el['href'].startswith('/') else (link_el['href'] if link_el else "")
+            
+            # Extract profile image url
+            img_el = card.find("div", class_="marketplace-avatar").find("img", class_="object-center")
+            image_url = img_el['src'] if img_el and img_el.has_attr('src') else ""
+
 
             # Extract price number
             # Example: "$2,000 • Session" -> 2000
@@ -36,7 +41,8 @@ async def scrape_marketplace():
                 "name": name,
                 "base_price": price_val,
                 "description": description,
-                "link": link
+                "link": link,
+                "image_url": image_url
             })
         except Exception as e:
             print(f"Error parsing expert card: {e}")

@@ -26,12 +26,12 @@ def scheduled_scrape():
 
 # Initialize Scheduler
 scheduler = BackgroundScheduler()
-scheduler.add_job(scheduled_scrape, 'interval', minutes=15)
+scheduler.add_job(scheduled_scrape, 'interval', minutes=10)
 
 @app.on_event("startup")
 def startup_event():
     scheduler.start()
-    print("Local scheduler started: Scraper will run every 15 minutes.")
+    print("Local scheduler started: Scraper will run every 10 minutes.")
 
 @app.on_event("shutdown")
 def shutdown_event():

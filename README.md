@@ -1,12 +1,12 @@
 # Intro.co Marketplace Scraper & API
 
-A FastAPI project that scrapes expert details from Intro.co every 15 minutes and serves the data through an API with a 20% price increase.
+A FastAPI project that scrapes expert details from Intro.co every 10 minutes and serves the data through an API with a 20% price increase.
 
 ## Features
 - **Scraper**: Periodically crawls `https://intro.co/marketplace`.
 - **FastAPI**: Serves the scraped data.
 - **Price logic**: Increases expert prices by 20% in the API output.
-- **Scheduled**: Runs every 15 minutes using Vercel Cron Jobs.
+- **Scheduled**: Runs every 10 minutes using Vercel Cron Jobs.
 
 ## Local Setup
 
@@ -39,4 +39,4 @@ A FastAPI project that scrapes expert details from Intro.co every 15 minutes and
    vercel
    ```
 
-The Cron job is configured in `vercel.json` to run every 15 minutes.
+The Cron job is configured in `vercel.json` to run every 10 minutes.
