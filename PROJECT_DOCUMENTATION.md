@@ -10,16 +10,14 @@ The system consists of three main components: a **Scraper**, a **Database (Mongo
 
 ```mermaid
 graph TD
-    A[Scheduled Event - Every 10 Min] -->|Triggers| B(FastAPI /scrape Endpoint)
-    B --> C[Scraper Service]
-    C -->|Fetch HTML| D[Intro.co Marketplace]
-    D -->|HTML Data| C
-    C -->|Parse & Calculate Price +20%| E[Processed Expert Data]
-    E -->|Delete Old Data & Insert New| F[(MongoDB Atlas)]
-    G[Client/User] -->|GET /experts| H(FastAPI /experts Endpoint)
-    H -->|Query Latest Data| F
-    F -->|Return Data| H
-    H -->|Response JSON| G
+    A[Client/User] -->|GET /experts| B(FastAPI /experts Endpoint)
+    B -->|Instantly Return Cache| C[(MongoDB Atlas)]
+    C -->|Response JSON| A
+    B -.->|Triggers Background Task| D[Scraper Service]
+    D -.->|Fetch HTML| E[Intro.co Marketplace]
+    E -.->|HTML Data| D
+    D -.->|Parse & Calculate Price +20%| F[Processed Expert Data]
+    F -.->|Delete Old Data & Insert New| C
 ```
 
 ---
@@ -34,10 +32,10 @@ Used for persistent storage of scraped expert data.
 - **Format**: `mongodb+srv://<username>:<password>@<cluster>.mongodb.net/?retryWrites=true&w=majority`
 - **Setup**: Create a cluster on [MongoDB Atlas](https://www.mongodb.com/).
 
-### B. Vercel (Hosting & Scheduling)
-Used to host the FastAPI application and trigger the 10-minute cron job.
-- **Service**: Vercel Cron Jobs.
-- **Required**: A Vercel account linked to your GitHub/GitLab repository.
+### B. Vercel (Hosting Serverless Application)
+Used to host the FastAPI application. Vercel supports FastAPI `BackgroundTasks` directly, meaning a scrape can happen seamlessly without making the client wait HTTP requests.
+- **Service**: Vercel App Deployment.
+- **Required**: A Vercel account linked to your GitHub repository.
 
 ---
 
@@ -62,7 +60,7 @@ Each expert record in the database contains the following fields:
    - `DB_NAME`: The database name (default: `intro_scraper`).
    - `COLLECTION_NAME`: The collection name (default: `experts`).
 
-2. **Cron Configuration**: The `vercel.json` file in the project root handles the 10-minute scheduling automatically.
+2. **Trigger-on-Read Execution**: Due to the refactored design, there are **no external cron jobs** to configure. Calling `GET /experts` internally manages everything.
 
 ---
 

@@ -1,12 +1,12 @@
 # Intro.co Marketplace Scraper & API
 
-A FastAPI project that scrapes expert details from Intro.co every 10 minutes and serves the data through an API with a 20% price increase.
+A FastAPI project that scrapes expert details from Intro.co. It serves the data through an API with a 20% price increase and triggers a background scrape on every read request.
 
 ## Features
-- **Scraper**: Periodically crawls `https://intro.co/marketplace`.
+- **Scraper**: Crawls `https://intro.co/marketplace`.
 - **FastAPI**: Serves the scraped data.
 - **Price logic**: Increases expert prices by 20% in the API output.
-- **Scheduled**: Runs every 10 minutes using Vercel Cron Jobs.
+- **Trigger-on-Read**: Hitting `/experts` returns the current data immediately and queues a background scrape to update the database for the next user.
 
 ## Local Setup
 
@@ -28,15 +28,15 @@ A FastAPI project that scrapes expert details from Intro.co every 10 minutes and
 
 ## Deployment on Vercel
 
-1. **Vercel KV (Redis)**:
-   - Go to your Vercel Dashboard.
-   - Storage -> Create Database -> Redis (KV).
-   - Go to Settings -> Environment Variables.
-   - Copy `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` to your project's Environment Variables.
+1. **Connect Repository**:
+   - Go to [Vercel Dashboard](https://vercel.com).
+   - Click **Add New** -> **Project**.
+   - Select this project repository.
 
-2. **Deploy**:
-   ```bash
-   vercel
-   ```
+2. **Environment Variables**:
+   - Go to your Vercel project's **Environment Variables** tab.
+   - Add your `MONGODB_URI` connection string.
 
-The Cron job is configured in `vercel.json` to run every 10 minutes.
+3. **Deploy**:
+   - Click **Deploy**. Vercel will host the FastAPI application seamlessly.
+   - Note: Because scraping is triggered on an HTTP Request to `/experts`, no manual Cron setup is required!

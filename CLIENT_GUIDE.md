@@ -4,7 +4,7 @@ This document explains how your automated expert data system works and what item
 
 ## 1. How the System Works (Simplified)
 
-Your system is fully automated and runs every 10 minutes to ensure you always have the latest information.
+Your system is fully automated and ensures fresh data without needing scheduled tasks. It uses a "Trigger-on-Read" structure.
 
 ```mermaid
 graph LR
@@ -14,10 +14,10 @@ graph LR
     D -->|Ready for use| E[Client Frontend/App]
 ```
 
-1.  **Automatic Data Sync**: Every 10 minutes, the system visits the expert marketplace.
-2.  **Price Adjustment**: It automatically adds **20%** to the expert's original price.
-3.  **Secure Storage**: The updated data (names, descriptions, and new prices) is stored safely in your database.
-4.  **Instant API**: Your website or app can call the "Get Experts" link anytime to see the results.
+1.  **Instant Content**: When your app or website calls the "Get Experts" link, it instantly gets the saved experts.
+2.  **Automatic Data Sync**: At the exact same time, the server silently starts visiting the marketplace in the background to fetch new data for the *next* visitor.
+3.  **Price Adjustment**: It automatically adds **20%** to the expert's original price.
+4.  **Secure Storage**: The updated data (names, descriptions, and new prices) is stored safely in your database.
 
 ---
 
@@ -32,9 +32,9 @@ This is where the expert information is stored.
 - **Purpose**: Allows the system to save and retrieve the experts.
 
 ### B. Hosting Account (Vercel)
-This is where the code "lives" and the automation triggers are scheduled.
+This is where the code "lives". 
 - **Requirement**: A Vercel account.
-- **Purpose**: Runs the API and triggers the 10-minute automatic update.
+- **Purpose**: Runs the API and handles the background scraping process whenever data is requested.
 
 ---
 
