@@ -37,6 +37,9 @@ async def scrape_marketplace():
             if price_match:
                 price_val = float(price_match.group(1).replace(',', ''))
 
+            if "astrologer" in description.lower():
+                continue
+
             experts.append({
                 "name": name,
                 "base_price": price_val,
