@@ -2,6 +2,14 @@ import httpx
 from bs4 import BeautifulSoup
 import re
 
+BLOCKED_EXPERTS = {
+    "Sarah Waite", "Monisha Holmes", "Suzanne Gusette", "Cole Prots",
+    "El Shane", "Maisy B", "Amanda Lauren", "Shawty Astrology",
+    "Julia Loken", "Kara Nicole", "Aniya Brielle", "Sarah Potter",
+    "Danielle Arias", "Tamerri Ater, MBA", "Sophia Knapp",
+    "Nura Rachelle", "Sara Peters"
+}
+
 async def scrape_marketplace():
     url = "https://intro.co/marketplace"
     async with httpx.AsyncClient(headers={"User-Agent": "Mozilla/5.0"}) as client:
@@ -37,7 +45,7 @@ async def scrape_marketplace():
             if price_match:
                 price_val = float(price_match.group(1).replace(',', ''))
 
-            if "astrologer" in description.lower():
+            if "astrologer" in description.lower() or name in BLOCKED_EXPERTS:
                 continue
 
             experts.append({
