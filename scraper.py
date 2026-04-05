@@ -10,6 +10,15 @@ BLOCKED_EXPERTS = {
     "Nura Rachelle", "Sara Peters"
 }
 
+def normalize_text(text: str) -> str:
+    """Removes all whitespace and converts to lowercase for robust comparison."""
+    if not text:
+        return ""
+    return "".join(text.split()).lower()
+
+# Create a normalized set for efficient, case/space-insensitive lookup
+NORMALIZED_BLOCKED_EXPERTS = {normalize_text(name) for name in BLOCKED_EXPERTS}
+
 async def scrape_marketplace():
     url = "https://intro.co/marketplace"
     async with httpx.AsyncClient(headers={"User-Agent": "Mozilla/5.0"}) as client:
@@ -45,7 +54,7 @@ async def scrape_marketplace():
             if price_match:
                 price_val = float(price_match.group(1).replace(',', ''))
 
-            if "astrologer" in description.lower() or name in BLOCKED_EXPERTS:
+            if "astrolog" in description.lower() or normalize_text(name) in NORMALIZED_BLOCKED_EXPERTS:
                 continue
 
             experts.append({
